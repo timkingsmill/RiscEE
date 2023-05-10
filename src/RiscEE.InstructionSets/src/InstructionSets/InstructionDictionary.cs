@@ -2,6 +2,9 @@
 {
     public class InstructionDictionary
     {
+        public InstructionDictionary()
+        {
 
+        }
     }
 }
