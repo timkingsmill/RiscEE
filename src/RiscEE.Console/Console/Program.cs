@@ -1,12 +1,15 @@
 ﻿namespace RiscEE.Console
 {
-    using System;
 
     internal class Program
     {
+        private static readonly NLog.ILogger _logger = NLog.LogManager.GetCurrentClassLogger();
+
         static void Main(string[] args)
         {
-            Console.WriteLine("Hello, World!");
+            _logger.Info("Simulator started");
+
+            //Console.WriteLine("Hello, World!");
         }
     }
 }
