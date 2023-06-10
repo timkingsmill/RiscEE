@@ -1,4 +1,6 @@
-﻿namespace RiscEE.InstructionSets
+﻿using System.Collections.Generic;
+
+namespace RiscEE.InstructionSets
 {
     public class InstructionSet : IInstructionSet
     {
@@ -6,5 +8,7 @@
         {
 
         }
+
+        private List<OpCode> _opCodes = new();
     }
 }

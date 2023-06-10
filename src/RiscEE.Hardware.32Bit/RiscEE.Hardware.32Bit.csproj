@@ -1,0 +1,15 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net6.0</TargetFramework>
+    <ImplicitUsings>disable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+    <RootNamespace>RiscEE.Hardware</RootNamespace>
+    <AssemblyName>RiscEE.Hardware.32Bit</AssemblyName>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\RiscEE.Hardware\RiscEE.Hardware.csproj" />
+  </ItemGroup>
+
+</Project>
