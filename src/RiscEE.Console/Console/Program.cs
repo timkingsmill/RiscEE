@@ -1,15 +1,19 @@
-﻿namespace RiscEE.Console
-{
+﻿
+using RiscEE.Hardware.Hart;
 
+namespace RiscEE.Console
+{
     internal class Program
     {
-        private static readonly NLog.ILogger _logger = NLog.LogManager.GetCurrentClassLogger();
+        private static readonly NLog.ILogger Logger = NLog.LogManager.GetCurrentClassLogger();
 
         static void Main(string[] args)
         {
-            _logger.Info("Simulator started");
+            Logger.Info("Simulator started");
 
-            //Console.WriteLine("Hello, World!");
+            var host = new Host.Host();
+            host.Run(new Rv32IHartConfiguration());
+
         }
     }
 }

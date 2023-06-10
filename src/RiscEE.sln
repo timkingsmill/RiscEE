@@ -13,7 +13,13 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Kingsmill.Net", "Kingsmill.
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "RiscEE.Hardware", "RiscEE.Hardware\RiscEE.Hardware.csproj", "{237B753F-2AFF-4CAC-8534-8657D2C2E133}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RiscEE.Hardware.Test", "RiscEE.Hardware.Test\RiscEE.Hardware.Test.csproj", "{4B230314-A7F1-4A3E-ADB2-84DA92028EDF}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "RiscEE.Hardware.Test", "RiscEE.Hardware.Test\RiscEE.Hardware.Test.csproj", "{4B230314-A7F1-4A3E-ADB2-84DA92028EDF}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "RiscEE.Assembler", "RiscEE.Assembler\RiscEE.Assembler.csproj", "{4B73477B-4963-4FD8-A797-9B0D5189ECA6}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "RiscEE.Hardware.32Bit", "RiscEE.Hardware.32Bit\RiscEE.Hardware.32Bit.csproj", "{84817844-9E03-4182-8F6A-CAABC5B75D6F}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Kingsmill", "Kingsmill", "{0DB110EF-0764-42C7-A73B-63E412823853}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -41,9 +47,20 @@ Global
 		{4B230314-A7F1-4A3E-ADB2-84DA92028EDF}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{4B230314-A7F1-4A3E-ADB2-84DA92028EDF}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{4B230314-A7F1-4A3E-ADB2-84DA92028EDF}.Release|Any CPU.Build.0 = Release|Any CPU
+		{4B73477B-4963-4FD8-A797-9B0D5189ECA6}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{4B73477B-4963-4FD8-A797-9B0D5189ECA6}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{4B73477B-4963-4FD8-A797-9B0D5189ECA6}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{4B73477B-4963-4FD8-A797-9B0D5189ECA6}.Release|Any CPU.Build.0 = Release|Any CPU
+		{84817844-9E03-4182-8F6A-CAABC5B75D6F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{84817844-9E03-4182-8F6A-CAABC5B75D6F}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{84817844-9E03-4182-8F6A-CAABC5B75D6F}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{84817844-9E03-4182-8F6A-CAABC5B75D6F}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{FB8576C1-46CA-499B-84C7-C8CD70AE9275} = {0DB110EF-0764-42C7-A73B-63E412823853}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {25460B86-BF13-4669-B0DA-CF38D2D730D6}

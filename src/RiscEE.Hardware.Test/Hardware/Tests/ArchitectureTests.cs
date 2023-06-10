@@ -1,8 +1,10 @@
 using NUnit.Framework;
-using System.Runtime.CompilerServices;
 
 namespace RiscEE.Hardware.Tests
 {
+    using Kingsmill.Net.Enumerations;
+    using System;
+
     public class ArchitectureTests
     {
         [SetUp]
@@ -22,9 +24,15 @@ namespace RiscEE.Hardware.Tests
                 Assert.That(Architecture.Custom, Is.EqualTo(_ = Architecture.Custom));
 
                 Assert.That(Architecture.Rv32I, Is.GreaterThan(_ = Architecture.Unknown));
-
                 Assert.That(Architecture.Rv32I, Is.Not.Null);
             });
+
+
+            foreach (var a in Enumeration.GetAll<Architecture>())
+            {
+                Console.WriteLine(a.ToString());
+            }
+
         }
     }
 }
