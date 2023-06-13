@@ -4,9 +4,9 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace RiscEE.InstructionSets
+namespace RiscEE.Instructions
 {
-    public class OpCode
+    internal interface IInstructionSet
     {
     }
 }

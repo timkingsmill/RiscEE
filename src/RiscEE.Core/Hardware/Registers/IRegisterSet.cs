@@ -6,7 +6,10 @@ using System.Threading.Tasks;
 
 namespace RiscEE.Hardware.Registers
 {
-    public class Register
+    public interface IRegisterSet
     {
+        public UInt32 Read(RegisterID registerID);
+        void Write(RegisterID registerID, UInt32 value);
+
     }
 }

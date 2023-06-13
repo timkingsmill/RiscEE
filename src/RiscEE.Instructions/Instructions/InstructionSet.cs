@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 
-namespace RiscEE.InstructionSets
+namespace RiscEE.Instructions
 {
     public class InstructionSet : IInstructionSet
     {

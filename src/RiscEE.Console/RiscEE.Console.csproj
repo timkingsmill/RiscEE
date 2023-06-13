@@ -14,8 +14,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\RiscEE.Hardware.32Bit\RiscEE.Hardware.32Bit.csproj" />
-    <ProjectReference Include="..\RiscEE.Hardware.Rv32I\RiscEE.Hardware.Rv32I.csproj" />
+    <ProjectReference Include="..\RiscEE.Hardware.RV32I\RiscEE.Hardware.RV32I.csproj" />
   </ItemGroup>
 
   <ItemGroup>

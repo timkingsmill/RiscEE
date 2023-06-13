@@ -4,9 +4,9 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace RiscEE.Hardware.Registers
+namespace RiscEE.Instructions
 {
-    public class Register
+    internal class InstructionType
     {
     }
 }

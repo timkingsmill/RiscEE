@@ -3,6 +3,7 @@ using NUnit.Framework;
 namespace RiscEE.Hardware.Tests
 {
     using Kingsmill.Net.Enumerations;
+    using RiscEE.Hardware;
     using System;
 
     public class ArchitectureTests

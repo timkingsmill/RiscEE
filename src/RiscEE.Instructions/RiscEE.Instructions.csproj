@@ -6,9 +6,5 @@
     <Nullable>enable</Nullable>
     <RootNamespace>RiscEE</RootNamespace>
   </PropertyGroup>
-
-  <ItemGroup>
-    <Folder Include="InstructionSets\Extentions\" />
-  </ItemGroup>
-
+  
 </Project>

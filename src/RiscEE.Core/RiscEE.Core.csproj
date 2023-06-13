@@ -5,20 +5,12 @@
     <ImplicitUsings>disable</ImplicitUsings>
     <Nullable>enable</Nullable>
     <RootNamespace>RiscEE</RootNamespace>
-    <AssemblyName>RiscEE.Hardware</AssemblyName>
+    <AssemblyName>RiscEE.Core</AssemblyName>
+
   </PropertyGroup>
 
   <ItemGroup>
     <ProjectReference Include="..\Kingsmill.Net\Kingsmill.Net.csproj" />
-    <ProjectReference Include="..\RiscEE.Core\RiscEE.Core.csproj" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <Folder Include="Hardware\Cpu\" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <PackageReference Include="NLog" Version="5.2.0" />
   </ItemGroup>
 
 </Project>
