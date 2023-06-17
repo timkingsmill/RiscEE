@@ -20,6 +20,7 @@ namespace RiscEE.Assembler.Source
         }
 
         // -----------------------------------------------------------------------------------
+        // -----------------------------------------------------------------------------------
 
         public static void RegisterLineAssemblerFactory(string key, ILineAssemblerFactory factory)
         {
