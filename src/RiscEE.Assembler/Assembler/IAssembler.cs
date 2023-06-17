@@ -1,7 +1,9 @@
-﻿namespace RiscEE.Assembler
+﻿using System.IO;
+
+namespace RiscEE.Assembler
 {
     public interface IAssembler
     {
-        public IAssembly Compile();
+        public IAssemblyFile Compile(Stream source);
     }
 }

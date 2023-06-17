@@ -5,8 +5,6 @@ VisualStudioVersion = 17.5.33424.131
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{565CB6A9-DB28-4F35-929F-5D1787478E91}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "RiscEE.Console", "RiscEE.Console\RiscEE.Console.csproj", "{EF93C19E-B1E9-4C7C-BB03-6A93A5E7DA38}"
-EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Kingsmill.Net", "Kingsmill.Net\Kingsmill.Net.csproj", "{FB8576C1-46CA-499B-84C7-C8CD70AE9275}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "RiscEE.Hardware", "RiscEE.Hardware\RiscEE.Hardware.csproj", "{237B753F-2AFF-4CAC-8534-8657D2C2E133}"
@@ -23,16 +21,18 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "RiscEE.Core", "RiscEE.Core\
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "RiscEE.Hardware.RV32I", "RiscEE.Hardware.RV32I\RiscEE.Hardware.RV32I.csproj", "{86DDB1CD-DED1-4C67-9F30-13F3714CE45E}"
 EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "RiscEE.Console", "RiscEE.Console\RiscEE.Console.csproj", "{2BB54DD1-8E9B-4D70-98A2-63E5EDAA1F30}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "RiscEE.Assembler.Cli", "RiscEE.Assembler.Cli\RiscEE.Assembler.Cli.csproj", "{E830D581-C79F-4EB1-94C6-D1FC1218607E}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RiscEE.Assembler.Tests", "RiscEE.Assembler.Test\RiscEE.Assembler.Tests.csproj", "{9D7990C7-A5C5-421E-95EC-17D532E26F0F}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
 		Release|Any CPU = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
-		{EF93C19E-B1E9-4C7C-BB03-6A93A5E7DA38}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{EF93C19E-B1E9-4C7C-BB03-6A93A5E7DA38}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{EF93C19E-B1E9-4C7C-BB03-6A93A5E7DA38}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{EF93C19E-B1E9-4C7C-BB03-6A93A5E7DA38}.Release|Any CPU.Build.0 = Release|Any CPU
 		{FB8576C1-46CA-499B-84C7-C8CD70AE9275}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{FB8576C1-46CA-499B-84C7-C8CD70AE9275}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{FB8576C1-46CA-499B-84C7-C8CD70AE9275}.Release|Any CPU.ActiveCfg = Release|Any CPU
@@ -61,6 +61,18 @@ Global
 		{86DDB1CD-DED1-4C67-9F30-13F3714CE45E}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{86DDB1CD-DED1-4C67-9F30-13F3714CE45E}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{86DDB1CD-DED1-4C67-9F30-13F3714CE45E}.Release|Any CPU.Build.0 = Release|Any CPU
+		{2BB54DD1-8E9B-4D70-98A2-63E5EDAA1F30}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{2BB54DD1-8E9B-4D70-98A2-63E5EDAA1F30}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{2BB54DD1-8E9B-4D70-98A2-63E5EDAA1F30}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{2BB54DD1-8E9B-4D70-98A2-63E5EDAA1F30}.Release|Any CPU.Build.0 = Release|Any CPU
+		{E830D581-C79F-4EB1-94C6-D1FC1218607E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{E830D581-C79F-4EB1-94C6-D1FC1218607E}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{E830D581-C79F-4EB1-94C6-D1FC1218607E}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{E830D581-C79F-4EB1-94C6-D1FC1218607E}.Release|Any CPU.Build.0 = Release|Any CPU
+		{9D7990C7-A5C5-421E-95EC-17D532E26F0F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{9D7990C7-A5C5-421E-95EC-17D532E26F0F}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{9D7990C7-A5C5-421E-95EC-17D532E26F0F}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{9D7990C7-A5C5-421E-95EC-17D532E26F0F}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
