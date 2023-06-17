@@ -17,6 +17,7 @@ namespace RiscEE.Assembler.Tests
         [SetUp]
         public void Setup()
         {
+            LineAssemblerDictionary.RegisterLineAssemblerFactory("Hello", new NullLineAssemblerFactory());
             assembler = new Assembler();
         }
 

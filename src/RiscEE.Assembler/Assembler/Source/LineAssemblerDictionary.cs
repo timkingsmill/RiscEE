@@ -20,6 +20,7 @@ namespace RiscEE.Assembler.Source
         }
 
         // -----------------------------------------------------------------------------------
+        // -----------------------------------------------------------------------------------
 
         public static void RegisterLineAssemblerFactory(string key, ILineAssemblerFactory factory)
         {
@@ -29,10 +30,7 @@ namespace RiscEE.Assembler.Source
         // -----------------------------------------------------------------------------------
         // -----------------------------------------------------------------------------------
 
-        private static readonly Dictionary<string, ILineAssemblerFactory> _factoryDictionary = new()
-        {
-            { "Hello", new NullLineAssemblerFactory() }
-        };
+        private static readonly Dictionary<string, ILineAssemblerFactory> _factoryDictionary = new();
 
         // -----------------------------------------------------------------------------------
 
