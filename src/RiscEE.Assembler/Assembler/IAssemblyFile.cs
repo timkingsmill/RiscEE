@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace RiscEE.Assembler
 {
-    public interface IAssembly
+    public interface IAssemblyFile
     {
     }
 }
