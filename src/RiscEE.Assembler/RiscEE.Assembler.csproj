@@ -8,4 +8,8 @@
     <AssemblyName>RiscEE.Assembler</AssemblyName>
   </PropertyGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\RiscEE.Core\RiscEE.Core.csproj" />
+  </ItemGroup>
+
 </Project>
