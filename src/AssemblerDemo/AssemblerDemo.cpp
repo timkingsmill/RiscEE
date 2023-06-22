@@ -8,8 +8,6 @@
 #include <vector>
 #include <Windows.h>
 
-//namespace fs = std::filesystem;
-
 // ---------------------------------------------------------------------------------------------
 
 #pragma region Data Structures
@@ -19,6 +17,13 @@ struct datafile
     std::string name;
     std::string type;
     std::vector<std::string> value;
+};
+
+
+struct segment
+{
+    std::string name;
+    int32_t position;
 };
 
 #pragma endregion
@@ -35,10 +40,15 @@ std::string datamemory[4000]; // Initial Size of Data Memory is Fixed 4000 Bytes
 
 #pragma region Function Forward Declarations
 
-void expand_pseudo_instructions(std::vector<std::string>& instructions);
+void expand_pseudo_instructions(std::vector<std::string> instruction_formats, 
+                                std::vector<std::string>& instruction_lines,
+                                std::vector<std::string> instruction_params);
 void load_instrution_formats(std::vector<std::string>& instruction_formats);
 void read_data_segment();
-void read_text_segment(std::vector<std::string>& instructions);
+void read_text_segment(std::vector<std::string>& instruction_lines);
+void set_labels();
+void convert_sp_params(std::vector<std::string> instruction_params);
+void process(std::vector<std::string> instruction_params);
 
 
 #pragma endregion    
@@ -48,7 +58,17 @@ void read_text_segment(std::vector<std::string>& instructions);
 
 int main()
 {
-    std::cout << "-- Assembler C++ Demo! ------\n";
+
+    std::cout << "--------------------------------------" << std::endl
+                                                          << std::endl
+              << "    RiscEE C++ Assembler"               << std::endl
+                                                          << std::endl
+              << "--------------------------------------" << std::endl
+                                                          << std::endl;
+
+    std::cout << "TODO: Comments are not parsed." << std::endl;
+
+
 
     // Initialize the data memory.
     for (int i = 0; i < 4000; i++)
@@ -61,9 +81,21 @@ int main()
     std::vector<std::string> instruction_formats;
     load_instrution_formats(instruction_formats);
 
-    std::vector<std::string> instructions;
-    read_text_segment(instructions);
-    expand_pseudo_instructions(instructions);
+    std::vector<std::string> instruction_lines;
+    read_text_segment(instruction_lines);
+
+    std::vector<std::string> instruction_params;
+    expand_pseudo_instructions(instruction_formats, instruction_lines, instruction_params);
+
+    for (int i = 0; i < instruction_lines.size(); i++)
+    {
+        std::cout << "Instruction: " << instruction_lines[i] << std::endl;
+    }
+
+    set_labels();
+
+    convert_sp_params(instruction_params);
+    process(instruction_params);
 
     std::cout << "Exiting Assembler C++ Demo\n";
 }
@@ -131,7 +163,7 @@ void read_data_segment()
         while (!file.eof())
         {
             file >> word;
-            std::cout << word << std::endl;
+            //std::cout << word << std::endl;
 
             if (start > 1)
             {
@@ -167,7 +199,7 @@ void read_data_segment()
 // ---------------------------------------------------------------------------------------------
 
 // Read instructions from the test file.
-void read_text_segment(std::vector<std::string>& instructions)
+void read_text_segment(std::vector<std::string>& instruction_lines)
 {
     std::string filename = get_exe_path() + "test.asm";
 
@@ -185,15 +217,21 @@ void read_text_segment(std::vector<std::string>& instructions)
         while (std::getline(file, instruction))
         {
             if (instruction == ".data")
+            {
+                // Data section found.
                 flag = 1;
+            }
+
             if (instruction == ".text")
             {
+                // Instruction / text section found.
                 flag = 0;
                 continue;
             }
+
             if (flag != 1)
             {
-                instructions.push_back(instruction);
+                instruction_lines.push_back(instruction);
             }
         }
     }
@@ -202,20 +240,22 @@ void read_text_segment(std::vector<std::string>& instructions)
 
 // ---------------------------------------------------------------------------------------------
 
-void expand_pseudo_instructions(std::vector<std::string>& instructions)
+void expand_pseudo_instructions(std::vector<std::string> instruction_formats, 
+                                std::vector<std::string>& instruction_lines,
+                                std::vector<std::string> instruction_params)
 {
-    size_t instruction_count = instructions.size();
+    size_t instruction_count = instruction_lines.size();
     for (int instruction_index = 0; instruction_index < instruction_count; instruction_index++)
     {
-        std::string instruction = instructions[instruction_index];
+        std::string instruction = instruction_lines[instruction_index];
         
         // Itterate the characters of the instruction.
         for (int index = 0; index < instruction.size(); index++)
         {
             // Replace tabs with space characters.
-            if (instructions[instruction_index][index] == 9)
+            if (instruction_lines[instruction_index][index] == 9)
             {
-                instructions[instruction_index][index] = 32;
+                instruction_lines[instruction_index][index] = 32;
             }
         }
          
@@ -237,6 +277,7 @@ void expand_pseudo_instructions(std::vector<std::string>& instructions)
             {
                 // The instruction is a label.  
                 token += instruction[char_index];
+                std::cout << "Label Found:    " << token << std::endl;
                 // Goto the next character.
                 char_index++;
                 // Token reader completed. 
@@ -254,14 +295,86 @@ void expand_pseudo_instructions(std::vector<std::string>& instructions)
         size_t token_size = token.size();
         if (token[token_size - 1] == ':' && instruction.size() > token_size)
         {
-            // 
+            // TODO.
+            std::cout << "TODO: Parse text on the same line following a label definition." << std::endl;
         }
 
+        if (token == "la")
+        {
+            std::cout << "TODO: Parse ""la"" pseudo instruction." << std::endl;
+            //processla(i);
+            continue;
+        }
+        else if (token == "lw" || token == "lb" || token == "lhw")
+        {
+            std::cout << "TODO: Parse ""lw lb lhw"" pseudo instructions." << std::endl;
+        }
 
+        //   What is this doing??????
+        // Itterate all format strings.
+        for (int format_index = 0; format_index < instruction_formats.size(); format_index++)
+        {
+            //std::cout << instruction_formats[format_index] << std::endl;
+            std::string format_string = instruction_formats[format_index];
 
+            // Read the instruction mnemonic from the instruction format strings. 
+            std::string mnemonic;
+            int k1 = 0;
+            while (format_string[k1] != ' ')
+            {
+                mnemonic += format_string[k1];
+                k1++;
+            }
+            if (token.compare(mnemonic) == 0)
+            {
+                // Found the command format string.  
+                //std::cout << "Format Found:   Instruction: " << token << "  Mnemonic: " << mnemonic << std::endl;
 
+                std::string arguments;
+                for (int k = char_index; k < instruction.size(); k++)
+                {
+                    arguments += instruction[k];
+                }
+                instruction_params.push_back(arguments);
+               
+                //std::cout << "Command: " << mnemonic << "  Arguments:  " << arguments << std::endl;
+                break;
+            }
+
+        }
 
     }
+}
+
+// ---------------------------------------------------------------------------------------------
+
+void set_labels()
+{
+
+}
+
+// ---------------------------------------------------------------------------------------------
+
+// Convert Stack Pointer(sp) to x2
+void convert_sp_params(std::vector<std::string> instruction_params)
+{
+    for (int params_index = 0; params_index < instruction_params.size(); params_index++)
+    {
+        std::string params = instruction_params[params_index];
+
+        size_t char_count = params.size();
+        for (int char_index = 0; char_index < char_count; char_index++)
+        {
+        }
+    }
+}
+
+// ---------------------------------------------------------------------------------------------
+
+//To extract instruction type and process them independently
+void process(std::vector<std::string> instruction_params)
+{
+
 }
 
 // ---------------------------------------------------------------------------------------------
