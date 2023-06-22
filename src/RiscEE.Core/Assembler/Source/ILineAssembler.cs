@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace RiscEE.Assembler.Source
 {
-    public class ILineAssembler
+    public interface ILineAssembler
     {
     }
 }

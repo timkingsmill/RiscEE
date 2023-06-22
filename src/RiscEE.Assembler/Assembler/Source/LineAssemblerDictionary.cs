@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using static System.Net.Mime.MediaTypeNames;
+﻿using System.Collections.Generic;
 
 namespace RiscEE.Assembler.Source
 {
@@ -22,15 +17,15 @@ namespace RiscEE.Assembler.Source
         // -----------------------------------------------------------------------------------
         // -----------------------------------------------------------------------------------
 
-        public static void RegisterLineAssemblerFactory(string key, ILineAssemblerFactory factory)
+        public static void RegisterLineAssemblerFactory(string key, ILineAssemblerFactory<ILineAssembler> lineAssemblerFactory)
         {
-            _factoryDictionary[key] = factory;
+            _factoryDictionary[key] = lineAssemblerFactory;
         }
 
         // -----------------------------------------------------------------------------------
         // -----------------------------------------------------------------------------------
 
-        private static readonly Dictionary<string, ILineAssemblerFactory> _factoryDictionary = new();
+        private static readonly Dictionary<string, ILineAssemblerFactory<ILineAssembler>> _factoryDictionary = new();
 
         // -----------------------------------------------------------------------------------
 

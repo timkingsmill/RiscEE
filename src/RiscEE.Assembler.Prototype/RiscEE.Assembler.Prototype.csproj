@@ -1,0 +1,22 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <OutputType>Exe</OutputType>
+    <TargetFramework>net6.0</TargetFramework>
+    <ImplicitUsings>disable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+    <RootNamespace>RiscEE</RootNamespace>
+    <AssemblyName>RiscEE.Assembler.Prototype</AssemblyName>
+
+  </PropertyGroup>
+
+  <ItemGroup>
+    <None Update="TestCases\BubbleSortIterative.asm">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="TestCases\SumOfArray.asm">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+  </ItemGroup>
+
+</Project>

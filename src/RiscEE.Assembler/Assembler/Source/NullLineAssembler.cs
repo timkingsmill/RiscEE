@@ -6,22 +6,9 @@ using System.Threading.Tasks;
 
 namespace RiscEE.Assembler.Source
 {
-    public class NullLineAssembler : ILineAssembler
+    public class NullLineAssembler : BaseLineAssembler, ILineAssembler
     {
+        public NullLineAssembler() { }
     }
-
-
-    // ---------------------------------------------------------------------------------------------
-
-    public class NullLineAssemblerFactory : ILineAssemblerFactory
-    {
-        ILineAssembler ILineAssemblerFactory.CreateLineAssembler()
-        {
-            return new NullLineAssembler();
-        }
-    }
-
-    // ---------------------------------------------------------------------------------------------
-    // ---------------------------------------------------------------------------------------------
 
 }

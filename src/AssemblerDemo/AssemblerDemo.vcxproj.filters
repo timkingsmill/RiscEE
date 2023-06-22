@@ -1,0 +1,27 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="Source Files">
+      <UniqueIdentifier>{4FC737F1-C7A5-4376-A066-2A32D752A2FF}</UniqueIdentifier>
+      <Extensions>cpp;c;cc;cxx;c++;cppm;ixx;def;odl;idl;hpj;bat;asm;asmx</Extensions>
+    </Filter>
+    <Filter Include="ExampleFiles">
+      <UniqueIdentifier>{39ff85f2-3d09-4d72-af65-3e3aec5e7fa2}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="AssemblerDemo.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="ExampleFiles\test.asm">
+      <Filter>ExampleFiles</Filter>
+    </None>
+  </ItemGroup>
+  <ItemGroup>
+    <Text Include="ExampleFiles\formats.txt">
+      <Filter>ExampleFiles</Filter>
+    </Text>
+  </ItemGroup>
+</Project>

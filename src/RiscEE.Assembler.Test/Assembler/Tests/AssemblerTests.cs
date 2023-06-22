@@ -17,7 +17,8 @@ namespace RiscEE.Assembler.Tests
         [SetUp]
         public void Setup()
         {
-            LineAssemblerDictionary.RegisterLineAssemblerFactory("Hello", new NullLineAssemblerFactory());
+            LineAssemblerDictionary.RegisterLineAssemblerFactory("add", new LineAssemblerFactory<NullLineAssembler>());
+
             assembler = new Assembler();
         }
 
@@ -27,7 +28,7 @@ namespace RiscEE.Assembler.Tests
         [Test]
         public void DummyTest()
         {
-            Stream source = "Hello World".ToStream();
+            Stream source = "add World".ToStream();
             assembler.Compile(source);
         }
 
