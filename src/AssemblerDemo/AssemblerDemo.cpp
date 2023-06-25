@@ -5,6 +5,7 @@
 #include <filesystem>
 #include <iostream>
 #include <fstream>
+#include <sstream>
 #include <string>
 #include <vector>
 #include <Windows.h>
@@ -48,15 +49,24 @@ std::string datamemory[4000]; // Initial Size of Data Memory is Fixed 4000 Bytes
 
 #pragma region ---- Function Forward Declarations ----------------------------------------------
 
-void read_source_stream(std::istream& input, std::vector<std::string>& source_code);
+void assemble_source_code(std::vector<std::string>& source_code,
+    std::vector<std::string> format_strings);
 
-void expand_pseudo_instructions(std::vector<std::string> instruction_formats, 
+void expand_pseudo_instructions(std::vector<std::string> instruction_formats,
                                 std::vector<std::string>& instruction_lines,
                                 std::vector<std::string> instruction_params);
+
+void encode_instruction(std::string instruction_type, std::string instruction);
+
+std::string get_format_string(std::string mnemonic, std::vector<std::string> format_strings);
+
 void load_instrution_formats(std::vector<std::string>& instruction_formats);
 
 void read_data_segment(std::istream& input);
 void read_text_segment(std::istream& input, std::vector<std::string>& instruction_lines);
+void read_source_stream(std::istream& input, std::vector<std::string>& source_code);
+
+
 
 void parse_source_line(std::string& source_line, std::vector<std::string>& instruction_lines);
 
@@ -99,8 +109,9 @@ int main()
     ///read_data_segment();
 
 
-    std::vector<std::string> instruction_formats;
-    load_instrution_formats(instruction_formats);
+    // Get all instruction format strings;
+    std::vector<std::string> format_strings;
+    load_instrution_formats(format_strings);
 
     // Read and format the source code file.
     std::vector<std::string> source_code;
@@ -119,11 +130,7 @@ int main()
     }
     file.close();
 
-    for (int i = 0; i < source_code.size(); i++)
-    {
-        std::cout << i << ":     " << source_code[i] << std::endl;
-    }
-
+    assemble_source_code(source_code, format_strings);
 
     /******************
     // Read instructions and labels from the source file
@@ -155,6 +162,13 @@ int main()
 }
 
 // ---------------------------------------------------------------------------------------------
+// ---------------------------------------------------------------------------------------------
+
+void encode_instruction(std::string instruction_type, std::string instruction)
+{
+
+}
+
 // ---------------------------------------------------------------------------------------------
 
 std::string get_exe_path()
@@ -294,6 +308,63 @@ void read_text_segment(std::istream& input, std::vector<std::string>& instructio
             parse_source_line(instruction, instruction_lines);
         }
     }
+}
+
+// ---------------------------------------------------------------------------------------------
+
+void assemble_source_code(std::vector<std::string>& source_code, std::vector<std::string> format_strings)
+{
+    std::cout << "Assembling Source Code." << std::endl;
+
+    for (int i = 0; i < source_code.size(); i++)
+    {
+        //std::cout << i << ":     " << source_code[i] << std::endl;
+
+        std::string instruction = source_code[i];
+
+        // TODO: What to do with labels??
+
+        // Get mnemonic of the instruction.
+        std::string mnemonic;
+        std::stringstream stream(instruction);
+        stream >> mnemonic;
+
+                // Find the format of the instruction.
+        std::string format_string = get_format_string(mnemonic, format_strings);
+        if (!format_string.empty())
+        {
+            //std::cout << "FOUND THE FORMAT STRING:    " << format_string << std::endl;
+
+            // Get the instruction format type. Last field in the format string;
+            std::string instruction_type = format_string.substr(format_string.find_last_of(" "));
+            std::cout << "Found instruction type: " << mnemonic << "  " << instruction_type << std::endl;
+
+            encode_instruction(instruction_type, instruction);
+
+        }
+
+    }
+
+}
+
+// ---------------------------------------------------------------------------------------------
+
+std::string get_format_string(std::string mnemonic, std::vector<std::string> format_strings)
+{
+    std::string result_format_string;
+
+    for (std::string format_string : format_strings)
+    {
+        std::string format_mnemonic;
+        std::stringstream stream(format_string);
+        stream >> format_mnemonic;
+        if (format_mnemonic.compare(mnemonic) == 0)
+        {
+            result_format_string = format_string;
+            return result_format_string;
+        }
+    }
+    return result_format_string;
 }
 
 // ---------------------------------------------------------------------------------------------
