@@ -18,10 +18,8 @@
     <None Include="ExampleFiles\test.asm">
       <Filter>ExampleFiles</Filter>
     </None>
-  </ItemGroup>
-  <ItemGroup>
-    <Text Include="ExampleFiles\formats.txt">
+    <None Include="ExampleFiles\formats.txt">
       <Filter>ExampleFiles</Filter>
-    </Text>
+    </None>
   </ItemGroup>
 </Project>

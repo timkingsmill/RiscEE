@@ -69,6 +69,7 @@ void encode_instruction(std::string instruction_type, std::string instruction_st
                                                       std::map<std::string, int> register_map);
 
 void encode_I_instruction(std::string instruction_string, std::string format_string, std::map<std::string, int> register_map);
+void encode_R_instruction(std::string instruction_string, std::string format_string, std::map<std::string, int> register_map);
 
 std::string get_format_string(std::string mnemonic, std::vector<std::string> format_strings);
 
@@ -265,23 +266,23 @@ void encode_instruction(std::string instruction_type, std::string instruction_st
         // Immediate instruction type.
         encode_I_instruction(instruction_string, format_string, register_map);
     }
-    if (instruction_type.compare("R") == 0)
+    else if (instruction_type.compare("R") == 0)
+    {
+        encode_R_instruction(instruction_string, format_string, register_map);
+    }
+    else if (instruction_type.compare("S") == 0)
     {
 
     }
-    if (instruction_type.compare("S") == 0)
+    else if (instruction_type.compare("UJ") == 0)
     {
 
     }
-    if (instruction_type.compare("UJ") == 0)
+    else if (instruction_type.compare("U") == 0)
     {
 
     }
-    if (instruction_type.compare("U") == 0)
-    {
-
-    }
-    if (instruction_type.compare("SB") == 0)
+    else if (instruction_type.compare("SB") == 0)
     {
 
     }
@@ -333,6 +334,17 @@ void encode_I_instruction(std::string instruction_string, std::string format_str
 
     //std::string binary = std::bitset<8>(32).to_string();
     //std::cout << binary << std::endl;
+}
+
+// ---------------------------------------------------------------------------------------------
+
+void encode_R_instruction(std::string instruction_string, std::string format_string, std::map<std::string, int> register_map)
+{
+    std::cout << "Encode instruction type: R" << std::endl;
+
+    std::vector<std::string> parameter_tokens;
+    read_parameter_tokens(instruction_string, parameter_tokens);
+
 }
 
 // ---------------------------------------------------------------------------------------------
