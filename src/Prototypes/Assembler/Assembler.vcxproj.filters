@@ -31,5 +31,8 @@
     <None Include="ExampleFiles\test.asm">
       <Filter>ExampleFiles</Filter>
     </None>
+    <None Include="ExampleFiles\simple.asm">
+      <Filter>ExampleFiles</Filter>
+    </None>
   </ItemGroup>
 </Project>

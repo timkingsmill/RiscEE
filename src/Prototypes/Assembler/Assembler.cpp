@@ -1,3 +1,5 @@
+
+#include <cstddef>
 #include <iostream>
 #include <fstream>
 #include <vector>
@@ -5,8 +7,11 @@
 #include <Windows.h>
 
 // ----------------------------------------------------------------------------------
+// ----------------------------------------------------------------------------------
 
-#define START 268435456;
+#define START           268435456;
+//constexpr auto EXAMPLE_SOURCE = "simple.asm";
+constexpr auto EXAMPLE_SOURCE = "test.asm";
 
 // ----------------------------------------------------------------------------------
 // ----------------------------------------------------------------------------------
@@ -35,17 +40,17 @@ struct datafile
 
 struct seg
 {
-    std::string name;
-    int64_t position;
+    std::string name {};
+    int64_t position {};
 };
 
 // ----------------------------------------------------------------------------------
 
-typedef struct
+typedef struct label
 {
-    std::string s;
-    int index;
-} label;
+    std::string s {};
+    int index {};
+} label_t;
 
 // ----------------------------------------------------------------------------------
 
@@ -59,6 +64,9 @@ std::vector<label> labels;
 std::string convert(std::string s, int len);
 // Get 2's Complement Representation for Immediate Values
 uint32_t getinver(int32_t imme, int bit);
+
+// Remove leading whitespace characters
+std::string& ltrim(std::string& str);
 
 bool read_code();
 bool read_data();
@@ -79,7 +87,12 @@ void processlw(std::string type, int index, int64_t pos);
 
 int main()
 {
-    std::cout << "Assembler Prototype. Ported from A to M" << std::endl;
+    std::cout << "--------------------------------------" << std::endl
+                                                          << std::endl
+              << "    RiscEE C++ Assembler"               << std::endl
+                                                          << std::endl
+              << "--------------------------------------" << std::endl
+                                                          << std::endl;
 
     for (int i = 0; i < 4000; i++)
     {
@@ -253,12 +266,14 @@ std::string get_exe_path()
 // ----------------------------------------------------------------------------------
 // ----------------------------------------------------------------------------------
 
-// read code or text section.
+//   Read code or text sections from the source code file.
+//   Add labels and instruction strigs to the instruction strings vector.
+
 bool read_code()
 {
     code_strings.clear();
 
-    std::string filename = get_exe_path() + "test.asm";
+    std::string filename = get_exe_path() + EXAMPLE_SOURCE;
     std::ifstream file;
 
     file.open(filename);
@@ -273,20 +288,29 @@ bool read_code()
     int flag = 0;
     int start = 0;
     
+    // Read each line of the source code file.
     while (getline(file, line))
     {
-        if (line == ".data")
+        // Remove leading spaces and tabs.
+        ltrim(line);
+        
+        // Ignore empty lines.
+        if (!line.empty())
         {
-            flag = 1;
-        }
-        if (line == ".text")
-        {
-            flag = 0;
-            continue;
-        }
-        if (flag != 1)
-        {
-            code_strings.push_back(line);
+            if (line == ".data")
+            {
+                flag = 1;
+            }
+
+            if (line == ".text")
+            {
+                flag = 0;
+                continue;
+            }
+            if (flag != 1)
+            {
+                code_strings.push_back(line);
+            }
         }
     }
     file.close();
@@ -301,7 +325,7 @@ bool read_data()
 {
     std::vector<datafile> stored;
    
-    std::string filename = get_exe_path() + "test.asm";
+    std::string filename = get_exe_path() + EXAMPLE_SOURCE;
 
     std::ifstream file;
     file.open(filename);
@@ -616,6 +640,10 @@ void expand_pseudo_commands()
         // Use reference to code line string.
         std::string& line = code_strings[i];
 
+        // All lines within the instruction code strings  
+        // have leading whitespace stripped out.
+
+        // Replace all tab characters with space character.
         for (int index = 0; index < line.size(); index++)
         {
             // Replace tab with space character.
@@ -625,18 +653,34 @@ void expand_pseudo_commands()
             }
         }
 
-        int j = 0;
-        int start = -1;
+        //int j = 0;
+        //int start = -1;
             
-        while (j < line.size() && line[j] == ' ')
-        {
+        //while (j < line.size() && line[j] == ' ')
+        //{
             // Ignore space characters
-            j++;
-        }
-        start = j;
+        //    j++;
+        //}
+        //start = j;
         
         std::string instruction;
+        int char_index = 0;
 
+        // Read the first token from the source line.
+        while (char_index < line.size() && line[char_index] != ' ')
+        {
+            instruction += line[char_index];
+            char_index++;
+            if (char_index < line.size() && line[char_index] == ':')
+            {
+                instruction += line[char_index];
+                char_index++;
+                break;
+            }
+        }
+
+
+        /**
         while (j < line.size() && line[j] != ' ')
         {
             instruction += line[j];
@@ -648,11 +692,14 @@ void expand_pseudo_commands()
                 break;
             }
         }
+        */
 
-        while (j < line.size() && line[j] == ' ')
+        // Strip leading whitespace from the remainder of the source line.
+
+        while (char_index < line.size() && line[char_index] == ' ')
         {
             // Ignore space characters
-            j++;
+            char_index++;
         }
 
         size_t ins_size = instruction.size();
@@ -799,4 +846,22 @@ void processlw(std::string type, int index, int64_t pos)
 // ----------------------------------------------------------------------------------
 
 
+
+
+
+// ----------------------------------------------------------------------------------
+// ----------------------------------------------------------------------------------
+
+// Remove leading whitespace characters
+std::string& ltrim(std::string& str)
+{
+    auto itterator = std::find_if(str.begin(), str.end(), [](char ch)
+        {
+            return !std::isspace(ch); // , std::locale::classic());
+        });
+    str.erase(str.begin(), itterator);
+    return str;
+}
+
+// ----------------------------------------------------------------------------------
 
