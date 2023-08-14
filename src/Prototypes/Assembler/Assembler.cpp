@@ -1,5 +1,6 @@
 
-#include <cstddef>
+#include <algorithm>
+#include <iomanip>
 #include <iostream>
 #include <fstream>
 #include <vector>
@@ -18,11 +19,7 @@ constexpr auto EXAMPLE_SOURCE = "test.asm";
 
 std::string datamemory[4000]; // Initial Size of Data Memory is Fixed 4000 Bytes
 
-std::vector<std::string> format_strings;
-std::vector<std::string> code_strings;
 std::vector<std::string> code;
-
-size_t sizeI;
 
 // ----------------------------------------------------------------------------------
 // ----------------------------------------------------------------------------------
@@ -64,21 +61,25 @@ std::vector<label> labels;
 std::string convert(std::string s, int len);
 // Get 2's Complement Representation for Immediate Values
 uint32_t getinver(int32_t imme, int bit);
-
+std::string get_exe_path();
 // Remove leading whitespace characters
 std::string& ltrim(std::string& str);
 
-bool read_code();
+void read_file_strings(const std::string filename, std::vector<std::string>& strings);
+
+void read_text_section(const std::vector<std::string>& source_code, std::vector<std::string>& text_section);
+void expand_text_section(std::vector<std::string>& text_section);
+
+
 bool read_data();
-bool read_formats();
-void read_labels();
-void expand_pseudo_commands();
+//void read_labels();
+void expand_pseudo_commands(const std::vector<std::string>& source_code);
 
 // Convert Stack Pointer(sp) to x2
 void preprocess();
 
 void processla(int index);
-void processlw(std::string type, int index, int64_t pos);
+//void processlw(std::string type, int index, int64_t pos);
 
 
 
@@ -99,10 +100,74 @@ int main()
         datamemory[i] = "00";
     }
 
-    read_data();
-    read_formats();
-    read_code();
-    expand_pseudo_commands();
+    //read_data();
+    
+    // Read instruction format strings from file.
+    std::vector<std::string> formats;
+    try
+    {
+        const std::string filename = get_exe_path() + "formats.txt";
+        //std::cout << "Reading format strings file..." << std::endl;
+        read_file_strings(filename, formats);
+        for (auto& format : formats)
+        {
+            //std::cout << format << std::endl;
+        }
+    }
+    catch (...)
+    {
+        std::cout << "EXCEPTION RAISED" << std::endl;
+    }
+
+    // Read source code from file.
+    std::vector<std::string> source_code;
+    try
+    {
+        std::cout << "--------------------------------------------------" << std::endl;
+        std::cout << "Reading source code file..." << std::endl;
+
+        const std::string filename = get_exe_path() + EXAMPLE_SOURCE;
+        read_file_strings(filename, source_code);
+
+        uint32_t line_number = 0;
+        for (auto& line : source_code)
+        {
+            std::cout << std::right << std::setfill(' ') << std::setw(4) << ++line_number << "\t" << line << std::endl;
+        }
+    }
+    catch (...)
+    {
+        std::cout << "EXCEPTION RAISED while reading source file" << std::endl;
+    }
+
+    std::cout << "--------------------------------------------------" << std::endl;
+    std::cout << "Reading text section from source code..." << std::endl;
+
+    // Read text section from the source code.
+    std::vector<std::string> text_section;
+
+    read_text_section(source_code, text_section);
+    expand_text_section(text_section);
+
+    uint32_t line_number = 0;
+    for (auto& line : text_section)
+    {
+        std::cout << std::right << std::setfill(' ') << std::setw(4) << ++line_number << "\t" << line << std::endl;
+    }
+
+
+    std::cout << "--------------------------------------------------" << std::endl;
+    
+    /**
+    expand_pseudo_commands(source_code);
+    for (auto& ins : code)
+    {
+        std::cout << ins << std::endl;
+    }
+
+    std::cout << "--------------------------------------------------" << std::endl;
+    */
+
     /*
     read_labels();
     preprocess();
@@ -266,12 +331,48 @@ std::string get_exe_path()
 // ----------------------------------------------------------------------------------
 // ----------------------------------------------------------------------------------
 
+void expand_text_section(std::vector<std::string>& text_section)
+{
+
+}
+
 //   Read code or text sections from the source code file.
 //   Add labels and instruction strigs to the instruction strings vector.
 
-bool read_code()
+void read_text_section(const std::vector<std::string>& source_code, std::vector<std::string>& text_section)
 {
-    code_strings.clear();
+    text_section.clear();
+    int flag = 0;
+
+    for (std::string source_line : source_code)
+    {
+        // Remove leading spaces and tabs.
+        ltrim(source_line);
+
+        // Ignore empty source_line.
+        if (!source_line.empty())
+        {
+            if (source_line == ".data")
+            {
+                flag = 1;
+            }
+
+            if (source_line == ".text")
+            {
+                flag = 0;
+                continue;
+            }
+            if (flag != 1)
+            {
+                text_section.push_back(source_line);
+            }
+        }
+    }
+}
+
+/*****
+{
+    source_code.clear();
 
     std::string filename = get_exe_path() + EXAMPLE_SOURCE;
     std::ifstream file;
@@ -309,14 +410,14 @@ bool read_code()
             }
             if (flag != 1)
             {
-                code_strings.push_back(line);
+                source_code.push_back(line);
             }
         }
     }
     file.close();
     return true;
 }
-
+**/
 // ----------------------------------------------------------------------------------
 // ----------------------------------------------------------------------------------
 
@@ -493,34 +594,35 @@ bool read_data()
 // ----------------------------------------------------------------------------------
 // ----------------------------------------------------------------------------------
 
-bool read_formats()
+void read_file_strings(const std::string filename, std::vector<std::string>& strings)
 {
-    std::string filename = get_exe_path() + "formats.txt";
     std::ifstream file;
-    file.open(filename);
-    if (!file.is_open())
+    file.exceptions(std::ifstream::badbit);
+    try
     {
-        std::cerr << "ERROR: Failed to open: " << filename << std::endl;
-        return false;
+        file.open(filename);
+        std::string line;
+        while (getline(file, line))
+        {
+            strings.push_back(line);
+        }
     }
-
-    std::string line;
-    while (getline(file, line))
+    catch (std::ifstream::failure e)
     {
-        format_strings.push_back(line);
+        std::cerr << "Exception opening / reading / closing file: " << "'" << filename << "'." << std::endl;
     }
     file.close();
-
-    sizeI = format_strings.size();
-    return true;
 }
 
 // ----------------------------------------------------------------------------------
+// ----------------------------------------------------------------------------------
 
+
+/**
 // Read the labels from code.
 void read_labels()
 {
-    size_t code_lines = code_strings.size();
+    size_t code_lines = source_code.size();
     int count = -1;
     for (int i = 0; i < code_lines; i++)
     {
@@ -528,20 +630,20 @@ void read_labels()
         int j = 0;
         int start = -1;
 
-        while (j < code_strings[i].size() && code_strings[i][j] == ' ')
+        while (j < source_code[i].size() && source_code[i][j] == ' ')
         {
             // Ignore leading space characters.
             j++;
         }
         start = j;
 
-        while (j < code_strings[i].size() && code_strings[i][j] != ' ')
+        while (j < source_code[i].size() && source_code[i][j] != ' ')
         {
-            ins += code_strings[i][j];
+            ins += source_code[i][j];
             j++;
-            if (j < code_strings[i].size() && code_strings[i][j] == ':')
+            if (j < source_code[i].size() && source_code[i][j] == ':')
             {
-                ins += code_strings[i][j];
+                ins += source_code[i][j];
                 j++;
                 break;
             }
@@ -562,16 +664,16 @@ void read_labels()
             labels.push_back(temp);
         }
 
-        if (ins[sins - 1] == ':' && sins < code_strings[i].size())
+        if (ins[sins - 1] == ':' && sins < source_code[i].size())
         {
-            while (j < code_strings[i].size() && code_strings[i][j] == ' ')
+            while (j < source_code[i].size() && source_code[i][j] == ' ')
             {
                 j++;
             }
             ins.clear();
-            while (j < code_strings[i].size() && code_strings[i][j] != ' ')
+            while (j < source_code[i].size() && source_code[i][j] != ' ')
             {
-                ins += code_strings[i][j];
+                ins += source_code[i][j];
                 j++;
             }
         }
@@ -584,14 +686,14 @@ void read_labels()
         else if (ins == "lw" || ins == "lb" || ins == "lhw")
         {
             std::string lab;
-            size_t j = code_strings[i].size() - 1;
-            while (code_strings[i][j] == ' ')
+            size_t j = source_code[i].size() - 1;
+            while (source_code[i][j] == ' ')
             {
                 j--;
             }
-            while (code_strings[i][j] != ' ')
+            while (source_code[i][j] != ' ')
             {
-                lab += code_strings[i][j];
+                lab += source_code[i][j];
                 j--;
             }
             reverse(lab.begin(), lab.end());
@@ -614,12 +716,14 @@ void read_labels()
         for (int k = 0; k < sizeI; k++)
         {
             std::string type;
-            int k1 = 0;
+            int k1 = 0;  /*****
             while (format_strings[k][k1] != ' ')
             {
                 type += (format_strings[k][k1]);
+
                 k1++;
             }
+            ********
             if (ins.compare(type) == 0)
             {
                 count++;
@@ -628,17 +732,18 @@ void read_labels()
         }
     }
 }
+*/
 
 // ----------------------------------------------------------------------------------
 // ----------------------------------------------------------------------------------
 
-void expand_pseudo_commands()
+void expand_pseudo_commands(const std::vector<std::string>& source_code)
 {
-    size_t string_count = code_strings.size();
+    size_t string_count = source_code.size();
     for (int i = 0; i < string_count; i++)
     {
         // Use reference to code line string.
-        std::string& line = code_strings[i];
+        std::string line = source_code[i];
 
         // All lines within the instruction code strings  
         // have leading whitespace stripped out.
@@ -655,14 +760,14 @@ void expand_pseudo_commands()
 
         //int j = 0;
         //int start = -1;
-            
+
         //while (j < line.size() && line[j] == ' ')
         //{
             // Ignore space characters
         //    j++;
         //}
         //start = j;
-        
+
         std::string instruction;
         int char_index = 0;
 
@@ -694,34 +799,43 @@ void expand_pseudo_commands()
         }
         */
 
-        // Strip leading whitespace from the remainder of the source line.
-
+        // Find the character index for the next token.
         while (char_index < line.size() && line[char_index] == ' ')
         {
             // Ignore space characters
             char_index++;
         }
 
+        // Get length of the instruction string
         size_t ins_size = instruction.size();
-        
-        if (instruction[ins_size - 1] == ':' && line.size() > ins_size)
+        //size_t ins_length = instruction.length();
+
+        // Is the instruction a label 
+        if (instruction[ins_size - 1] == ':')
         {
-            instruction.clear();
-            while (j < line.size() && line[j] == ' ')
+            // If there are instructions following as the label.
+            if (line.size() > ins_size)
             {
-                // Ignore space characters
-                j++;
-            }
-            start = j;
-            // Add characters to the instruction string
-            while (line[j] != ' ')
-            {
-                instruction += line[j++];
+                // Clear the label text from the instruction.
+                instruction.clear();
+
+                while (char_index < line.size() && line[char_index] == ' ')
+                {
+                    // Ignore space characters
+                    char_index++;
+                }
+
+                //start = j;
+
+                // Read the mnemonic following the label to the instruction string
+                while (line[char_index] != ' ')
+                {
+                    instruction += line[char_index++];
+                }
             }
         }
 
-
-
+        /*
         if (instruction == "la")
         {
             processla(i);
@@ -757,8 +871,40 @@ void expand_pseudo_commands()
 
             continue;
         }
-       
-        for (int k = 0; k < sizeI; k++)
+        **/
+
+
+        /******************
+        for (auto& instruction_format : format_strings)
+        {
+            //std::cout << instruction_format << std::endl;
+
+            // Extract the instruction mnemonic from the format string.
+            std::string mnemonic;
+            for (auto ch : instruction_format)
+            {
+                if (!std::isspace(ch))
+                {
+                    mnemonic += ch;
+                }
+                else
+                {
+                    break;
+                }
+            }
+            if (instruction.compare(mnemonic) == 0)
+            {
+                std::cout << "INSTRUCTION TYPE FOUND FOR INSTRUCTION: " << instruction << std::endl;
+                //std::cout << instruction_format << std::endl;
+                code.push_back(line);
+                break;
+            }
+        }
+        //std::cout << "**************************************" << std::endl;
+        ****************************/
+
+        /**
+        for (auto index = 0; index < format_strings.size(); index++)
         {
             std::string instruction_type;
             int k1 = 0;
@@ -770,14 +916,16 @@ void expand_pseudo_commands()
             if (instruction.compare(instruction_type) == 0)
             {
                 std::string add;
+                /**
                 for (int k = start; k < code_strings[i].size(); k++)
                 {
                     add += code_strings[i][k];
                 }
-                code.push_back(add);
-                break;
-            }
-        }
+                **/
+              //  code.push_back(add);
+            //    break;
+          //  }
+        //}
     }
 }
 
@@ -813,23 +961,23 @@ void processla(int index)
 }
 
 // ----------------------------------------------------------------------------------
-
+/**************
 // Process Load Word(lw) pseudo command
 void processlw(std::string type, int index, int64_t pos)
 {
     int64_t current_program_counter = code.size() * 4 + START;
 
     int i = 0;
-    while (code_strings[index][i] != 'x')
+    while (source_code[index][i] != 'x')
     {
         i++;
     }
     i++;
 
     std::string s;
-    while (code_strings[index][i] != ' ')
+    while (source_code[index][i] != ' ')
     {
-        s += code_strings[index][i++];
+        s += source_code[index][i++];
     }
 
     current_program_counter = pos - current_program_counter;
@@ -841,7 +989,7 @@ void processlw(std::string type, int index, int64_t pos)
 
 
 }
-
+*********************/
 // ----------------------------------------------------------------------------------
 // ----------------------------------------------------------------------------------
 
