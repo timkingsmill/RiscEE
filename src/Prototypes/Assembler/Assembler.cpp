@@ -106,75 +106,10 @@ int main()
         datamemory[i] = "00";
     }
 
-    //read_data();
-    
-    // Read instruction format strings from file.
-    std::vector<std::string> instruction_formats;
-    try
-    {
-        const std::string filename = get_exe_path() + "formats.txt";
-        //std::cout << "Reading format strings file..." << std::endl;
-        read_file_strings(filename, instruction_formats);
-        for (auto& format : instruction_formats)
-        {
-            //std::cout << format << std::endl;
-        }
-    }
-    catch (...)
-    {
-        std::cout << "EXCEPTION RAISED" << std::endl;
-    }
-
-    // Read source code from file.
-    std::vector<std::string> source_code;
-    try
-    {
-        std::cout << "--------------------------------------------------" << std::endl;
-        std::cout << "Reading source code file..." << std::endl;
-
-        const std::string filename = get_exe_path() + EXAMPLE_SOURCE;
-        read_file_strings(filename, source_code);
-
-        uint32_t line_number = 0;
-        for (auto& line : source_code)
-        {
-            std::cout << std::right << std::setfill(' ') << std::setw(4) << ++line_number << "\t" << line << std::endl;
-        }
-    }
-    catch (...)
-    {
-        std::cout << "EXCEPTION RAISED while reading source file" << std::endl;
-    }
-
-    std::cout << "--------------------------------------------------" << std::endl;
-    std::cout << "Reading text section from source code..." << std::endl;
-
-    // Read text section from the source code.
-    std::vector<std::string> text_section;
-    read_text_section(source_code, text_section);
-
-    uint32_t line_number = 0;
-    for (auto& line : text_section)
-    {
-        std::cout << std::right << std::setfill(' ') << std::setw(4) << ++line_number << "\t" << line << std::endl;
-    }
-
-    std::cout << "--------------------------------------------------" << std::endl;
-    std::cout << "Expanding text section..." << std::endl;
-    // Expand the text sections pseudo instructions.
-    std::vector<std::string> instructions;
-    expand_text_section(text_section, instruction_formats, instructions);
-
-    for (auto& instruction : instructions)
-    {
-        std::cout << instruction << std::endl;
-    }
-
-    /**
-    expand_pseudo_commands(source_code);
-    std::cout << "--------------------------------------------------" << std::endl;
-    */
-
+    read_data();
+    read_formats();
+    read_code();
+    expand_pseudo_commands();
     /*
     read_labels();
     preprocess();
@@ -338,23 +273,15 @@ std::string get_exe_path()
 // ----------------------------------------------------------------------------------
 // ----------------------------------------------------------------------------------
 
-std::string get_instruction_format(const std::string mnemonic, const std::vector<std::string>& instruction_formats)
-{
-    for (std::string instruction_format : instruction_formats)
-    {
-        std::istringstream format_stream(instruction_format);
-        std::string format_mnemonic;
-        format_stream >> format_mnemonic;
-        if (format_mnemonic.compare(mnemonic) == 0)
-        {
-            return instruction_format;
-        }
-    }
-    return {};
-}
+//   Read code or text sections from the source code file.
+//   Add labels and instruction strigs to the instruction strings vector.
 
-// ----------------------------------------------------------------------------------
-// ----------------------------------------------------------------------------------
+bool read_code()
+{
+    code_strings.clear();
+
+    std::string filename = get_exe_path() + EXAMPLE_SOURCE;
+    std::ifstream file;
 
 void expand_text_section(const std::vector<std::string>& text_section, 
                          const std::vector<std::string>& instruction_formats,
@@ -424,12 +351,12 @@ void read_text_section(const std::vector<std::string>& source_code, std::vector<
             }
             if (flag != 1)
             {
-                text_section.push_back(source_line);
+                code_strings.push_back(line);
             }
         }
     }
 }
-
+**/
 // ----------------------------------------------------------------------------------
 // ----------------------------------------------------------------------------------
 
