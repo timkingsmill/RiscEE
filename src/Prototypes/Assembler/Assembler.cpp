@@ -95,21 +95,87 @@ void processla(int index);
 int main()
 {
     std::cout << "--------------------------------------" << std::endl
-                                                          << std::endl
-              << "    RiscEE C++ Assembler"               << std::endl
-                                                          << std::endl
-              << "--------------------------------------" << std::endl
-                                                          << std::endl;
+        << std::endl
+        << "    RiscEE C++ Assembler" << std::endl
+        << std::endl
+        << "--------------------------------------" << std::endl
+        << std::endl;
 
     for (int i = 0; i < 4000; i++)
     {
         datamemory[i] = "00";
     }
 
-    read_data();
-    read_formats();
-    read_code();
-    expand_pseudo_commands();
+    //read_data();
+
+    // Read instruction format strings from file.
+    std::vector<std::string> instruction_formats;
+    try
+    {
+        const std::string filename = get_exe_path() + "formats.txt";
+        //std::cout << "Reading format strings file..." << std::endl;
+        read_file_strings(filename, instruction_formats);
+        for (auto& format : instruction_formats)
+        {
+            //std::cout << format << std::endl;
+        }
+    }
+    catch (...)
+    {
+        std::cout << "EXCEPTION RAISED" << std::endl;
+    }
+
+    // Read source code from file.
+    std::vector<std::string> source_code;
+    try
+    {
+        std::cout << "--------------------------------------------------" << std::endl;
+        std::cout << "Reading source code file..." << std::endl;
+
+        const std::string filename = get_exe_path() + EXAMPLE_SOURCE;
+        read_file_strings(filename, source_code);
+
+        uint32_t line_number = 0;
+        for (auto& line : source_code)
+        {
+            std::cout << std::right << std::setfill(' ') << std::setw(4) << ++line_number << "\t" << line << std::endl;
+        }
+    }
+    catch (...)
+    {
+        std::cout << "EXCEPTION RAISED while reading source file" << std::endl;
+    }
+
+    std::cout << "--------------------------------------------------" << std::endl;
+    std::cout << "Reading text section from source code..." << std::endl;
+
+    // Read text section from the source code.
+    std::vector<std::string> text_section;
+
+    read_text_section(source_code, text_section);
+
+    std::vector<std::string> instructions;
+    expand_text_section(text_section, instruction_formats, instructions);
+
+    uint32_t line_number = 0;
+    for (auto& line : text_section)
+    {
+        std::cout << std::right << std::setfill(' ') << std::setw(4) << ++line_number << "\t" << line << std::endl;
+    }
+
+
+    std::cout << "--------------------------------------------------" << std::endl;
+
+    /**
+    expand_pseudo_commands(source_code);
+    for (auto& ins : code)
+    {
+        std::cout << ins << std::endl;
+    }
+
+    std::cout << "--------------------------------------------------" << std::endl;
+    */
+
     /*
     read_labels();
     preprocess();
@@ -273,16 +339,6 @@ std::string get_exe_path()
 // ----------------------------------------------------------------------------------
 // ----------------------------------------------------------------------------------
 
-//   Read code or text sections from the source code file.
-//   Add labels and instruction strigs to the instruction strings vector.
-
-bool read_code()
-{
-    code_strings.clear();
-
-    std::string filename = get_exe_path() + EXAMPLE_SOURCE;
-    std::ifstream file;
-
 void expand_text_section(const std::vector<std::string>& text_section, 
                          const std::vector<std::string>& instruction_formats,
                                std::vector<std::string>& instructions)
@@ -323,6 +379,14 @@ void expand_text_section(const std::vector<std::string>& text_section,
 // ----------------------------------------------------------------------------------
 // ----------------------------------------------------------------------------------
 
+std::string get_instruction_format(const std::string mnemonic, const std::vector<std::string>& instruction_formats)
+{
+    return {};
+}
+
+// ----------------------------------------------------------------------------------
+// ----------------------------------------------------------------------------------
+
 //   Read code or text sections from the source code file.
 //   Add labels and instruction strigs to the instruction strings vector.
 
@@ -351,12 +415,12 @@ void read_text_section(const std::vector<std::string>& source_code, std::vector<
             }
             if (flag != 1)
             {
-                code_strings.push_back(line);
+                text_section.push_back(source_line);
             }
         }
     }
 }
-**/
+
 // ----------------------------------------------------------------------------------
 // ----------------------------------------------------------------------------------
 
